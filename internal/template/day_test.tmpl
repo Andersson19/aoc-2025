@@ -23,25 +23,25 @@ func TestDay(t *testing.T) {
 	tests := []test.Test{
 		{
 			Name:     "part 1 example",
-			Subject:  day.PartOne,
+			DayFunc:  day.PartOne,
 			Input:    exampleInput,
 			Expected: 0,
 		},
 		{
 			Name:     "part 1 real",
-			Subject:  day.PartOne,
+			DayFunc:  day.PartOne,
 			Input:    realInput,
 			Expected: 0,
 		},
 		{
 			Name:     "part 2 example",
-			Subject:  day.PartTwo,
+			DayFunc:  day.PartTwo,
 			Input:    exampleInput,
 			Expected: 0,
 		},
 		{
 			Name:     "part 2 real",
-			Subject:  day.PartTwo,
+			DayFunc:  day.PartTwo,
 			Input:    realInput,
 			Expected: 0,
 		},
@@ -49,7 +49,7 @@ func TestDay(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
-			actual := test.Subject(test.Input, test.Extras...)
+			actual := test.DayFunc(test.Input, test.Extras...)
 			if actual != test.Expected {
 				t.Errorf("Expected %d, actual %d", test.Expected, actual)
 			}

@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"slices"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Andersson19/aoc-2025/internal"
@@ -28,6 +29,10 @@ type TemplateData struct {
 
 func main() {
 	rootFolder := util.GetModuleRootPath()
+	
+	//For windows
+	rootFolder = strings.ReplaceAll(rootFolder, "\\", "/")
+
 
 	yearDirPaths, e := filepath.Glob(filepath.Join(rootFolder, "20[1-9][0-9]"))
 	if e != nil {
