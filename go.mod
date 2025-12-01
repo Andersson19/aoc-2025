@@ -1,4 +1,4 @@
-module github.com/chwallen/advent-of-code
+module github.com/Andersson19/aoc-2025
 
 go 1.23.0
 

@@ -14,7 +14,7 @@ Things that are shared between days are placed inside the _internal_ directory.
 
 ## Instructions
 
-Start by replacing all occurrences of _chwallen/advent-of-code_ with your own
+Start by replacing all occurrences of _Andersson19/aoc-2025_ with your own
 module name.
 
 The Makefile includes commands to scaffold a day. Each command requires the

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/chwallen/advent-of-code/internal/aoc"
+	"github.com/Andersson19/aoc-2025/internal/aoc"
 )
 
 func main() {

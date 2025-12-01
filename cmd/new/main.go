@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/chwallen/advent-of-code/internal"
-	"github.com/chwallen/advent-of-code/internal/aoc"
-	"github.com/chwallen/advent-of-code/internal/util"
+	"github.com/Andersson19/aoc-2025/internal"
+	"github.com/Andersson19/aoc-2025/internal/aoc"
+	"github.com/Andersson19/aoc-2025/internal/util"
 )
 
 type TemplateData struct {

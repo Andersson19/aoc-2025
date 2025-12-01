@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/chwallen/advent-of-code/internal/util"
+	"github.com/Andersson19/aoc-2025/internal/util"
 )
 
 type AdventOfCodeResult struct {
