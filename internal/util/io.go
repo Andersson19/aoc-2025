@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 )
 
 // ReadLines eagerly reads all lines from filePath.
@@ -36,4 +37,9 @@ func GetModuleRootPath() string {
 		return output[0 : len(output)-2]
 	}
 	return output[0 : len(output)-1]
+}
+
+func Atoi(s string) int {
+	i, _ := strconv.Atoi(s)
+	return i
 }
