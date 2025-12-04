@@ -1,0 +1,61 @@
+package day03_test
+
+import (
+	_ "embed"
+	"strings"
+	"testing"
+
+	day "github.com/Andersson19/aoc-2025/2025/day03"
+	"github.com/Andersson19/aoc-2025/internal/test"
+)
+
+//go:embed input.txt
+var input string
+
+func TestDay(t *testing.T) {
+  exampleInput := strings.Split(
+    `987654321111111
+811111111111119
+234234234234278
+818181911112111`,
+    "\n",
+  )
+
+	realInput := strings.Split(input[0:len(input)-1], "\n")
+
+	tests := []test.Test{
+		{
+			Name:     "part 1 example",
+			DayFunc:  day.PartOne,
+			Input:    exampleInput,
+			Expected: 357,
+		},
+		{
+			Name:     "part 1 real",
+			DayFunc:  day.PartOne,
+			Input:    realInput,
+			Expected: 17281,
+		},
+		{
+			Name:     "part 2 example",
+			DayFunc:  day.PartTwo,
+			Input:    exampleInput,
+			Expected: 3121910778619,
+		},
+		{
+			Name:     "part 2 real",
+			DayFunc:  day.PartTwo,
+			Input:    realInput,
+			Expected: 171388730430281,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			actual := test.DayFunc(test.Input, test.Extras...)
+			if actual != test.Expected {
+				t.Errorf("Expected %d, actual %d", test.Expected, actual)
+			}
+		})
+	}
+}
