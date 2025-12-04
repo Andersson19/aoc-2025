@@ -1,6 +1,7 @@
 package day02
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -80,7 +81,45 @@ func findConstantFromLength(length int) int {
 }
 
 func PartTwo(lines []string, extras ...any) any {
-	_ = lines
+	sum := 0
+	for _, id_range := range lines {
+		fmt.Println("========", id_range, "==========")
+		start, end, _ := strings.Cut(id_range, "-")
+		endValue := util.Atoi(end)
 
-	return 0
+		length := len(start)
+
+		var divisors []int
+		for i := 1; i < length; i++ {
+			if length % i == 0 {
+				divisors = append(divisors, i)
+			}
+		}
+		fmt.Println(divisors)
+
+		for _, div := range divisors {
+			curr := util.Atoi(start[:div])
+
+			for {
+				var str strings.Builder
+
+				for range length / div {
+					str.WriteString(strconv.Itoa(curr))
+				}
+				fmt.Println(str.String())
+				
+				num := util.Atoi(str.String())
+				
+				if num > util.Atoi(start) {
+					if num > endValue {
+						break
+					}
+					sum += num
+				}
+			}
+			
+		}
+	}
+
+	return sum
 }
