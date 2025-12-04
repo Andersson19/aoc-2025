@@ -49,7 +49,7 @@ input:
 	@$(GO) run ./cmd/input $(YEAR_FLAG) $(DAY_FLAG) $(AOC_COOOKIE_FLAG)
 
 test:
-	@$(GO) test --cover $(TEST_FLAG)
+	@$(GO) test --cover $(TEST_FLAG) -v
 
 clean:
 	$(RM) advent-of-code ./cmd/run/day_parts.go
