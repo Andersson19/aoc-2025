@@ -28,25 +28,25 @@ func TestDay(t *testing.T) {
 			Name:     "part 1 example",
 			DayFunc:  day.PartOne,
 			Input:    exampleInput,
-			Expected: 0,
+			Expected: 4277556,
 		},
 		{
 			Name:     "part 1 real",
 			DayFunc:  day.PartOne,
 			Input:    realInput,
-			Expected: 0,
+			Expected: 4364617236318,
 		},
 		{
 			Name:     "part 2 example",
 			DayFunc:  day.PartTwo,
 			Input:    exampleInput,
-			Expected: 0,
+			Expected: 3263827,
 		},
 		{
 			Name:     "part 2 real",
 			DayFunc:  day.PartTwo,
 			Input:    realInput,
-			Expected: 0,
+			Expected: 9077004354241,
 		},
 	}
 
