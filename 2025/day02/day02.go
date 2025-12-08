@@ -82,7 +82,6 @@ func findConstantFromLength(length int) int {
 func PartTwo(lines []string, extras ...any) any {
 	sum := 0
 	for _, id_range := range lines {
-		fmt.Println("========", id_range, "==========")
 		start, end, _ := strings.Cut(id_range, "-")
 		endValue := util.Atoi(end)
 
@@ -94,7 +93,6 @@ func PartTwo(lines []string, extras ...any) any {
 				divisors = append(divisors, i)
 			}
 		}
-		fmt.Println(divisors)
 
 		for _, div := range divisors {
 			curr := util.Atoi(start[:div])
@@ -105,7 +103,6 @@ func PartTwo(lines []string, extras ...any) any {
 				for range length / div {
 					str.WriteString(strconv.Itoa(curr))
 				}
-				fmt.Println(str.String())
 				
 				num := util.Atoi(str.String())
 				
