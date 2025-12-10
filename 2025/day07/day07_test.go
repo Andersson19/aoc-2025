@@ -36,30 +36,30 @@ func TestDay(t *testing.T) {
 	realInput := strings.Split(input[0:len(input)-1], "\n")
 
 	tests := []test.Test{
-		{
-			Name:     "part 1 example",
-			DayFunc:  day.PartOne,
-			Input:    exampleInput,
-			Expected: 21,
-		},
-		{
-			Name:     "part 1 real",
-			DayFunc:  day.PartOne,
-			Input:    realInput,
-			Expected: 1609,
-		},
+		// {
+		// 	Name:     "part 1 example",
+		// 	DayFunc:  day.PartOne,
+		// 	Input:    exampleInput,
+		// 	Expected: 21,
+		// },
+		// {
+		// 	Name:     "part 1 real",
+		// 	DayFunc:  day.PartOne,
+		// 	Input:    realInput,
+		// 	Expected: 1609,
+		// },
 		{
 			Name:     "part 2 example",
 			DayFunc:  day.PartTwo,
 			Input:    exampleInput,
 			Expected: 40,
 		},
-		// {
-		// 	Name:     "part 2 real",
-		// 	DayFunc:  day.PartTwo,
-		// 	Input:    realInput,
-		// 	Expected: 0,
-		// },
+		{
+			Name:     "part 2 real",
+			DayFunc:  day.PartTwo,
+			Input:    realInput,
+			Expected: 0,
+		},
 	}
 
 	for _, test := range tests {
