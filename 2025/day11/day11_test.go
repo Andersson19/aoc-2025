@@ -27,7 +27,24 @@ iii: out`,
     "\n",
   )
 
-	// realInput := strings.Split(input[0:len(input)-1], "\n")
+  exampleInputPartTwo := strings.Split(
+	`svr: aaa bbb
+aaa: fft
+fft: ccc
+bbb: tty
+tty: ccc
+ccc: ddd eee
+ddd: hub
+hub: fff
+eee: dac
+dac: fff
+fff: ggg hhh
+ggg: out
+hhh: out`,
+	"\n",
+  )
+
+	realInput := strings.Split(input[0:len(input)-1], "\n")
 
 	tests := []test.Test{
 		{
@@ -36,24 +53,24 @@ iii: out`,
 			Input:    exampleInput,
 			Expected: 5,
 		},
-		// {
-		// 	Name:     "part 1 real",
-		// 	DayFunc:  day.PartOne,
-		// 	Input:    realInput,
-		// 	Expected: 0,
-		// },
-		// {
-		// 	Name:     "part 2 example",
-		// 	DayFunc:  day.PartTwo,
-		// 	Input:    exampleInput,
-		// 	Expected: 0,
-		// },
-		// {
-		// 	Name:     "part 2 real",
-		// 	DayFunc:  day.PartTwo,
-		// 	Input:    realInput,
-		// 	Expected: 0,
-		// },
+		{
+			Name:     "part 1 real",
+			DayFunc:  day.PartOne,
+			Input:    realInput,
+			Expected: 643,
+		},
+		{
+			Name:     "part 2 example",
+			DayFunc:  day.PartTwo,
+			Input:    exampleInputPartTwo,
+			Expected: 2,
+		},
+		{
+			Name:     "part 2 real",
+			DayFunc:  day.PartTwo,
+			Input:    realInput,
+			Expected: 417190406827152,
+		},
 	}
 
 	for _, test := range tests {

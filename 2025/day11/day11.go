@@ -1,65 +1,65 @@
 package day11
 
 import (
-	"fmt"
 	"strings"
 )
 
 type Device struct {
 	name string
-	outputs []Device
+	outputs []*Device
 }
 
-type ServerRack struct {
-	devices []Device
+type VisitedDevice struct  {
+	name string
+	seenFft bool
+	seenDac bool
 }
 
-
-func PartOne(lines []string, extras ...any) any {
-	var rack ServerRack
+func createDevices(lines []string) map[string]*Device {
+	devices := make(map[string]*Device)
 
 	for _, line := range lines {
-		strSplit := strings.Split(line, ":")
-
+		strSplit := strings.Split(line, ": ")
 		deviceName := strSplit[0]
-		outputNames := strings.Split(strings.Trim(strSplit[1], " "), " ")
+		outputNames := strings.Split(strSplit[1], " ")
 
-		outputList := make([]Device, len(outputNames))
-		for i := range outputNames {
-			outputList[i] = Device{
-				name: outputNames[i],
-				outputs: nil,
-			}
-		}
-		
-		rack.devices = append(rack.devices, Device{
+		// create and alloc memory for outputs
+		devices[deviceName] = &Device{
 			name: deviceName,
-			outputs: outputList,
-		})
+			outputs: make([]*Device, len(outputNames)),
+		}
+	}
+	// manually add out
+	devices["out"] = &Device{
+		name: "out",
 	}
 
-	paths := 0
-	paths = searchOutFromDevice(rack, "you", paths)
-
-	return paths
+	// fill with outputs
+	for _, line := range lines {
+		strSplit := strings.Split(line, ": ")
+		deviceName := strSplit[0]
+		outputList := strings.Split(strSplit[1], " ")
+		
+		for i, o := range outputList {
+			devices[deviceName].outputs[i] = devices[o]
+		}
+	}
+	return devices
 }
 
-func searchOutFromDevice(rack ServerRack, deviceName string, paths int) int {
-	fmt.Println("> Searching:", deviceName)
-	
-	currDevice := Device{}
-	for _, device := range rack.devices {
-		if deviceName == device.name {
-			currDevice = device
-		}
-	}
+func PartOne(lines []string, extras ...any) any {
+	devices := createDevices(lines)
 
-	for _, output := range currDevice.outputs {
+	return searchOutFromDevice(*devices["you"])
+}
+
+func searchOutFromDevice(device Device) int {
+	paths := 0
+	for _, output := range device.outputs {
 		if output.name == "out" {
-			paths += 1
-			fmt.Println(paths)
+			return 1
 		} else {
-			paths += searchOutFromDevice(rack, output.name, paths)
+			paths += searchOutFromDevice(*output)
 		}
 	}
 
@@ -67,7 +67,40 @@ func searchOutFromDevice(rack ServerRack, deviceName string, paths int) int {
 }
 
 func PartTwo(lines []string, extras ...any) any {
-	_ = lines
+	devices := createDevices(lines)
+	
+	// 
+	visited := make(map[VisitedDevice]int)
 
-	return 0
+	return searchTree(*devices["svr"], false, false, visited)
+}
+
+func searchTree(device Device, hasPassedFFT, hasPassedDAC bool, visited map[VisitedDevice]int) int {
+	if device.name == "out" {
+		if hasPassedFFT && hasPassedDAC {
+			return 1
+		} else {
+			return 0
+		}
+	}
+
+	paths := 0
+	for _, output := range device.outputs {
+		seenFFT := hasPassedFFT || output.name == "fft"
+		seenDAC := hasPassedDAC || output.name == "dac"
+		key := VisitedDevice{
+			name: output.name,
+			seenFft: seenFFT,
+			seenDac: seenDAC,
+		}
+
+		if v, ok := visited[key]; ok {
+			paths += v
+		} else {
+			v = searchTree(*output, seenFFT, seenDAC, visited)
+			visited[key] = v
+			paths += v
+		}
+	}
+	return paths
 }
