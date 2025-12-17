@@ -14,7 +14,26 @@ var input string
 
 func TestDay(t *testing.T) {
   exampleInput := strings.Split(
-    ``,
+    `162,817,812
+57,618,57
+906,360,560
+592,479,940
+352,342,300
+466,668,158
+542,29,236
+431,825,988
+739,650,466
+52,470,668
+216,146,977
+819,987,18
+117,168,530
+805,96,715
+346,949,466
+970,615,88
+941,993,340
+862,61,35
+984,92,344
+425,690,689`,
     "\n",
   )
 
@@ -25,25 +44,26 @@ func TestDay(t *testing.T) {
 			Name:     "part 1 example",
 			DayFunc:  day.PartOne,
 			Input:    exampleInput,
-			Expected: 0,
+			Extras: []any{10},
+			Expected: 40,
 		},
 		{
 			Name:     "part 1 real",
 			DayFunc:  day.PartOne,
 			Input:    realInput,
-			Expected: 0,
+			Expected: 102816,
 		},
 		{
 			Name:     "part 2 example",
 			DayFunc:  day.PartTwo,
 			Input:    exampleInput,
-			Expected: 0,
+			Expected: 25272,
 		},
 		{
 			Name:     "part 2 real",
 			DayFunc:  day.PartTwo,
 			Input:    realInput,
-			Expected: 0,
+			Expected: 100011612,
 		},
 	}
 
