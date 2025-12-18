@@ -14,37 +14,39 @@ var input string
 
 func TestDay(t *testing.T) {
   exampleInput := strings.Split(
-    ``,
+    `[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
+[...#.] (0,2,3,4) (2,3) (0,4) (0,1,2) (1,2,3,4) {7,5,12,7,2}
+[.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}`,
     "\n",
   )
 
-	realInput := strings.Split(input[0:len(input)-1], "\n")
+	// realInput := strings.Split(input[0:len(input)-1], "\n")
 
 	tests := []test.Test{
 		{
 			Name:     "part 1 example",
 			DayFunc:  day.PartOne,
 			Input:    exampleInput,
-			Expected: 0,
+			Expected: 7,
 		},
-		{
-			Name:     "part 1 real",
-			DayFunc:  day.PartOne,
-			Input:    realInput,
-			Expected: 0,
-		},
-		{
-			Name:     "part 2 example",
-			DayFunc:  day.PartTwo,
-			Input:    exampleInput,
-			Expected: 0,
-		},
-		{
-			Name:     "part 2 real",
-			DayFunc:  day.PartTwo,
-			Input:    realInput,
-			Expected: 0,
-		},
+		// {
+		// 	Name:     "part 1 real",
+		// 	DayFunc:  day.PartOne,
+		// 	Input:    realInput,
+		// 	Expected: 0,
+		// },
+		// {
+		// 	Name:     "part 2 example",
+		// 	DayFunc:  day.PartTwo,
+		// 	Input:    exampleInput,
+		// 	Expected: 0,
+		// },
+		// {
+		// 	Name:     "part 2 real",
+		// 	DayFunc:  day.PartTwo,
+		// 	Input:    realInput,
+		// 	Expected: 0,
+		// },
 	}
 
 	for _, test := range tests {
