@@ -1,45 +1,58 @@
 package day10
 
+/*
+	Thanks to:
+		- Reddit user: tenthmascot (https://www.reddit.com/r/adventofcode/comments/1pk87hl/2025_day_10_part_2_bifurcate_your_way_to_victory)
+		- Github user: pemoreau (https://github.com/pemoreau/advent-of-code/)
+	for the inspiration to this solution
+*/
+
 import (
-	"fmt"
+	"math"
 	"strings"
 
 	"github.com/Andersson19/aoc-2025/internal/util"
 )
 
 type Machine struct {
-	diagram []bool
-	buttons [][]int
-	joltage []int
+	diagram Diagram
+	buttons []Button
+	joltage Joltage
 }
 
-type Queue [][]bool
+type ButtonCombination struct {
+	joltage Joltage
+	buttonPresses int
+}
+
+type Button []int
+type Diagram []int
+type Joltage []int
 
 func PartOne(lines []string, extras ...any) any {
 	machines := createMachines(lines)
+	var btnCombs []ButtonCombination
 
 	fewestPresses := 0
-	// for _, machine := range machines {
-	// 	fmt.Println("=================================")
-	// 	fmt.Println("Wanted diagram:", printDiagram(machine.diagram))
-	// 	fmt.Println("buttons:", machine.buttons)
-	// 	fmt.Println("joltage:", machine.joltage)
-	// 	fewestPresses += findFewestPresses(machine)
-	// }
-
-	fmt.Println("=================================")
-	fmt.Println("Wanted diagram:", printDiagram(machines[0].diagram))
-	fmt.Println("buttons:", machines[0].buttons)
-	fmt.Println("joltage:", machines[0].joltage)
-	fewestPresses += findFewestPresses(machines[0])
-
+	for _, machine := range machines {
+		btnCombs = findAllButtonCombinations(machine.buttons, len(machine.diagram))
+		fewestPresses += machine.diagram.findFewestPresses(btnCombs)
+	}
 	return fewestPresses
 }
 
 func PartTwo(lines []string, extras ...any) any {
-	_ = lines
+	machines := createMachines(lines)
+	fewestPresses := 0
 
-	return 0
+	for _, machine := range machines {
+		var fewest int
+		btnCombs := findAllButtonCombinations(machine.buttons, len(machine.joltage))
+		fewest, _ = machine.joltage.findFewestPresses(btnCombs)
+		fewestPresses += fewest
+	}
+
+	return fewestPresses
 }
 
 func createMachines(lines []string) []Machine {
@@ -50,16 +63,16 @@ func createMachines(lines []string) []Machine {
 		buttons := split[1:len(split)-1]
 		joltage := strings.Split(strings.Trim(split[len(split)-1], "{}"), ",")
 
-		diagramObj := make([]bool, len(diagram))
+		diagramObj := make([]int, len(diagram))
 		for i, d := range diagram {
 			if d == '#' {
-				diagramObj[i] = true
+				diagramObj[i] = 1
 			} else {
-				diagramObj[i] = false
+				diagramObj[i] = 0
 			}
 		}
 
-		buttonsObj := make([][]int, len(buttons))
+		buttonsObj := make([]Button, len(buttons))
 		for i, b := range buttons {
 			bSplit := strings.Split(strings.Trim(b, "()"), ",")
 
@@ -84,85 +97,111 @@ func createMachines(lines []string) []Machine {
 	return machines
 }
 
-func findFewestPresses(machine Machine) int {
-	startDiagram := createStartNode(len(machine.diagram))
-	var queue Queue
-	var nextDiagram []bool
+func findAllButtonCombinations(buttons []Button, diagramSize int) []ButtonCombination {
+	possibleCombinations := 1 << len(buttons)
+	var joltage []int
+	var btnPresses int
 
-	//init queue
-	queue = append(queue, startDiagram)
-
-	pressCounter := 0
-	for {
-		var nextQueue Queue
-		isAdded := false
-		fmt.Println()
-		for _, diagram := range queue {
-			if util.AreEqual(diagram, machine.diagram) {
-				return pressCounter
-			}
-
-			for _, button := range machine.buttons {
-				nextDiagram = pressButton(diagram, button)
-
-				if len(nextQueue) > 0 {
-					for _, q := range nextQueue {
-						if util.AreEqual(nextDiagram, q) {
-							isAdded = true
-							break
-						}
-					}
+	btnCombs := make([]ButtonCombination, 0, possibleCombinations)
+	for i := range possibleCombinations {
+		joltage = make([]int, diagramSize)
+		btnPresses = 0
+		
+		// press buttons
+		for j := range buttons {
+			if (i & (1 << j)) != 0 {
+				btnPresses++
+				for _, idx := range buttons[j] {
+					joltage[idx]++
 				}
-				if !isAdded {
-					nextQueue = append(nextQueue, nextDiagram)
-					isAdded = false
-				}
-
 			}
 		}
-		queue = nextQueue
-		pressCounter += 1
+		
+		btnCombs = append(btnCombs, ButtonCombination{
+			joltage: joltage,
+			buttonPresses: btnPresses,
+		})
+	}
+	return btnCombs
+}
 
-		if pressCounter > 3 {
-			return pressCounter
+func (diagram Diagram) findFewestPresses(btnCombs []ButtonCombination) int {
+	minBtnPresses := -1
+	Inner:
+	for _, comb := range btnCombs {
+		for i, value := range comb.joltage {
+			if diagram[i] != value % 2 {
+				continue Inner
+			}
 		}
-	}
-}
 
-func createStartNode(l int) []bool {
-	list := make([]bool, l)
-	for i := range list {
-		list[i] = false
-	}
-	return list
-}
-
-func pressButton(diagram []bool, buttons []int) []bool {
-	fmt.Println(">", printDiagram(diagram))
-	fmt.Println(">", buttons)
-	
-	d := make([]bool, len(diagram))
-	copy(diagram, d)
-
-
-	fmt.Println("-- before:", printDiagram(d))
-	for _, lightIndex := range buttons {
-		d[lightIndex] = !d[lightIndex]
-	}
-	fmt.Println("-- after:", printDiagram(d))
-	return d
-}
-
-func printDiagram(diagram []bool) string {
-	var sb strings.Builder
-	sb.WriteString("[")
-	for _, d := range diagram {
-		if d {
-			sb.WriteString("#")
+		if minBtnPresses == -1 {
+			minBtnPresses = comb.buttonPresses
 		} else {
-			sb.WriteString(".")
+			minBtnPresses = min(minBtnPresses, comb.buttonPresses)
 		}
 	}
-	sb.WriteString("]")
-	return sb.String()
+	return minBtnPresses
+}
+
+func (joltage Joltage) findFewestPresses(btnCombs []ButtonCombination) (int, bool) {
+	if joltage.isZero() {
+		return 0, true
+	}
+
+	fewestPresses := math.MaxInt
+	for _, comb := range btnCombs {
+		if !comb.joltage.smallerOrEqual(joltage) {
+			continue
+		}
+
+		if !comb.joltage.equalsModulo2(joltage) {
+			continue
+		}
+
+		nextJoltage := make(Joltage, len(joltage))
+		for i := range nextJoltage {
+			nextJoltage[i] = (joltage[i] - comb.joltage[i]) / 2
+		}
+
+		presses, ok := nextJoltage.findFewestPresses(btnCombs)
+		if !ok {
+			continue
+		}
+
+		if totalPresses := 2 * presses + comb.buttonPresses; totalPresses < fewestPresses {
+			fewestPresses = totalPresses
+		}
+	}
+	if fewestPresses < math.MaxInt {
+		return fewestPresses, true
+	}
+	return 0, false
+}
+
+func (joltage Joltage) isZero() bool {
+	for _, j := range joltage {
+		if j != 0 {
+			return false
+		}
+	}
+	return true
+}
+
+func (a Joltage) smallerOrEqual(b Joltage) bool {
+	for i := range a {
+		if a[i] > b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func (a Joltage) equalsModulo2(b Joltage) bool {
+	for i := range a {
+		if a[i] % 2 != b[i] % 2 {
+			return false
+		} 
+	}
+	return true
 }
